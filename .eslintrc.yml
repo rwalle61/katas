@@ -1,0 +1,30 @@
+extends:
+  - airbnb-base
+  - eslint:recommended
+  - plugin:import/errors
+  - plugin:import/warnings
+  - prettier # must go last, to turn off some previous rules
+
+plugins:
+  - prefer-arrow
+  - jest
+
+env:
+  browser: true
+  jest: true
+
+parserOptions:
+  ecmaVersion: 2020
+  sourceType: module
+
+rules:
+  require-await: error
+  prefer-arrow-callback: error
+  prefer-arrow/prefer-arrow-functions: error
+  import/no-extraneous-dependencies:
+    - error
+    - devDependencies:
+        - '**/*.test.tsx'
+        - '**/*.spec.tsx'
+        - '**/*test*'
+  import/extensions: off

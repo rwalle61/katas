@@ -1,0 +1,36 @@
+{
+  "name": "basic-js",
+  "author": "@rwalle61",
+  "license": "MIT",
+  "version": "1.0.0",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint --fix . --ext js",
+    "tidy": "yarn format && yarn lint",
+    "test": "jest --watch",
+    "test:once": "jest",
+    "test:coverage": "yarn test:once --coverage",
+    "test:coverage:browse": "yarn test:coverage; open coverage/lcov-report/index.html",
+    "test:ci": "yarn tidy && yarn test:coverage"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn test:ci"
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.10.4",
+    "babel-jest": "^25.2.3",
+    "eslint": "^5.16.0 || ^6.8.0 || ^7.2.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jest": "^23.18.0",
+    "eslint-plugin-prefer-arrow": "^1.2.1",
+    "husky": "^4.2.3",
+    "jest": "^25.2.3",
+    "jest-watch-typeahead": "^0.5.0",
+    "prettier": "^2.0.2"
+  }
+}
