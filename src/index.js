@@ -1,3 +1,1 @@
-const returnInput = (input) => input;
-
-export default returnInput;
+export default () => 1;

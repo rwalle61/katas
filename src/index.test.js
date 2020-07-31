@@ -1,7 +1,11 @@
-import returnInput from '.';
+import foo from '.';
 
-describe('returnInput', () => {
-  it('returns the input', () => {
-    expect(returnInput(1)).toEqual(1);
+/**
+ *
+ */
+
+describe('foo', () => {
+  it('returns 1', () => {
+    expect(foo()).toEqual(1);
   });
 });
