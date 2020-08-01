@@ -14,9 +14,7 @@
     "test:ci": "yarn tidy && yarn test:coverage"
   },
   "husky": {
-    "hooks": {
-      "pre-push": "yarn test:ci"
-    }
+    "hooks": {}
   },
   "dependencies": {},
   "devDependencies": {
