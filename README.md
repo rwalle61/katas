@@ -1,4 +1,4 @@
-# Basic JS template
+# Katas
 
 ## Table of Contents
 
@@ -8,40 +8,20 @@
 
 ## Overview
 
-This is a basic JS non-web template, useful as a starting point for katas.
+This repo contains my solutions to clean code katas, for example some I've come across in Agile Technical Practices Distilled.
+
+The main branch is a JavaScript template for starting a new kata. The other branches contain the code for the katas - one branch per kata.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
-
-### Prerequisites
-
-[Download Node.js v8 or above](https://github.com/nodejs/node#download)
-
-### Installing
-
-Clone the repo
-
 ```bash
-git clone git@github.com:rwalle61/basic-js.git
+git clone <REPO>
 ```
-
-Install dependencies
 
 ```bash
 yarn install
 ```
 
-## Running the Tests
-
-### Jest watch mode
-
 ```bash
-yarn test
-```
-
-### All tests
-
-```bash
-yarn test:ci
+yarn test # starts Jest watch mode
 ```
