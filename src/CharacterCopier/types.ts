@@ -7,5 +7,5 @@ export interface Destination {
 }
 
 export interface Copier {
-  Copy(): void
+  Copy(): void;
 }

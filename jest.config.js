@@ -1,4 +1,5 @@
 module.exports = {
+  restoreMocks: true,
   coverageThreshold: {
     global: {
       // branches: 100,
