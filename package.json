@@ -5,8 +5,9 @@
   "version": "1.0.0",
   "scripts": {
     "format": "prettier --write .",
-    "lint": "eslint --fix . --ext js",
+    "lint": "eslint --fix . --ext js --ext ts",
     "tidy": "yarn format && yarn lint",
+    "type-check": "tsc --pretty --noEmit",
     "test": "jest --watch",
     "test:once": "jest",
     "test:coverage": "yarn test:once --coverage",
@@ -19,6 +20,9 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",
+    "@types/jest": "^26.0.8",
+    "@typescript-eslint/eslint-plugin": "^3.8.0",
+    "@typescript-eslint/parser": "^3.8.0",
     "babel-jest": "^25.2.3",
     "eslint": "^5.16.0 || ^6.8.0 || ^7.2.0",
     "eslint-config-airbnb-base": "^14.2.0",
@@ -26,9 +30,12 @@
     "eslint-plugin-import": "^2.21.2",
     "eslint-plugin-jest": "^23.18.0",
     "eslint-plugin-prefer-arrow": "^1.2.1",
+    "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.2.3",
     "jest": "^25.2.3",
     "jest-watch-typeahead": "^0.5.0",
-    "prettier": "^2.0.2"
+    "prettier": "^2.0.2",
+    "ts-jest": "^26.1.4",
+    "typescript": "^3.9.7"
   }
 }
