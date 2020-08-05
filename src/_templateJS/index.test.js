@@ -1,9 +1,5 @@
 import foo from '.';
 
-/**
- *
- */
-
 describe('foo(n)', () => {
   it('returns 1', () => {
     expect(foo()).toEqual(1);

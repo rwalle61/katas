@@ -5,7 +5,7 @@ extends:
   - plugin:import/errors
   - plugin:import/warnings
   - plugin:import/typescript
-  - plugin:prettier/recommended # must go last, to turn off some previous rules
+  - prettier # must go last, to turn off some previous rules
 
 plugins:
   - '@typescript-eslint'
@@ -23,6 +23,7 @@ parserOptions:
   sourceType: module
 
 rules:
+  max-classes-per-file: off
   require-await: error
   prefer-arrow-callback: error
   prefer-arrow/prefer-arrow-functions: error
@@ -32,3 +33,5 @@ rules:
         - '**/*test*'
   import/extensions: off
   import/prefer-default-export: off
+  no-unused-vars": off
+  '@typescript-eslint/no-unused-vars': error
