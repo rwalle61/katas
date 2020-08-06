@@ -1,4 +1,5 @@
 import { Shop, Item } from '.';
+import main from './example.main';
 
 const nameOfGenericItem = 'nameOfGenericItem';
 const dayBeforeSellByDate = 1;
@@ -174,87 +175,132 @@ describe('Shop.updateQuality()', () => {
         },
       );
     });
-    describe('Acceptance tests', () => {
-      it('updates all items correctly', () => {
-        const expectedItems = [
-          {
-            name: '+5 Dexterity Vest',
-            values: [
-              [10, 20],
-              [9, 19],
-            ],
-          },
-          {
-            name: 'Aged Brie',
-            values: [
-              [2, 0],
-              [1, 1],
-            ],
-          },
-          {
-            name: 'Sulfuras, Hand of Ragnaros',
-            values: [
-              [0, 80],
-              [0, 80],
-            ],
-          },
-          {
-            name: 'Sulfuras, Hand of Ragnaros',
-            values: [
-              [-1, 80],
-              [-1, 80],
-            ],
-          },
-          {
-            name: 'Backstage passes to a TAFKAL80ETC concert',
-            values: [
-              [15, 20],
-              [14, 21],
-            ],
-          },
-          {
-            name: 'Backstage passes to a TAFKAL80ETC concert',
-            values: [
-              [10, 49],
-              [9, 50],
-            ],
-          },
-          {
-            name: 'Backstage passes to a TAFKAL80ETC concert',
-            values: [
-              [5, 49],
-              [4, 50],
-            ],
-          },
-          {
-            name: 'Conjured Mana Cake',
-            values: [
-              [3, 6],
-              [2, 4],
-            ],
-          },
-        ];
+  });
+});
 
-        const items = expectedItems.map(
-          ({ name, values: [[initialSellIn, initialQuality]] }) =>
-            new Item(name, initialSellIn, initialQuality),
-        );
+describe('Golden Master', () => {
+  it('updates items correctly', () => {
+    const expectedItems = [
+      {
+        name: '+5 Dexterity Vest',
+        values: [
+          [10, 20],
+          [9, 19],
+        ],
+      },
+      {
+        name: 'Aged Brie',
+        values: [
+          [2, 0],
+          [1, 1],
+        ],
+      },
+      {
+        name: 'Sulfuras, Hand of Ragnaros',
+        values: [
+          [0, 80],
+          [0, 80],
+        ],
+      },
+      {
+        name: 'Sulfuras, Hand of Ragnaros',
+        values: [
+          [-1, 80],
+          [-1, 80],
+        ],
+      },
+      {
+        name: 'Backstage passes to a TAFKAL80ETC concert',
+        values: [
+          [15, 20],
+          [14, 21],
+        ],
+      },
+      {
+        name: 'Backstage passes to a TAFKAL80ETC concert',
+        values: [
+          [10, 49],
+          [9, 50],
+        ],
+      },
+      {
+        name: 'Backstage passes to a TAFKAL80ETC concert',
+        values: [
+          [5, 49],
+          [4, 50],
+        ],
+      },
+      {
+        name: 'Conjured Mana Cake',
+        values: [
+          [3, 6],
+          [2, 4],
+        ],
+      },
+    ];
 
-        const gildedRose = new Shop(items);
+    const items = expectedItems.map(
+      ({ name, values: [[initialSellIn, initialQuality]] }) =>
+        new Item(name, initialSellIn, initialQuality),
+    );
 
-        const updatedItems = gildedRose.updateQuality();
+    const gildedRose = new Shop(items);
 
-        expectedItems.forEach((expectedItem, i) => {
-          const {
-            name: expectedName,
-            values: [, [expectedSellIn, expectedQuality]],
-          } = expectedItem;
-          const item = updatedItems[i];
-          expect(item.name).toBe(expectedName);
-          expect(item.sellIn).toBe(expectedSellIn);
-          expect(item.quality).toBe(expectedQuality);
-        });
-      });
+    const updatedItems = gildedRose.updateQuality();
+
+    expectedItems.forEach((expectedItem, i) => {
+      const {
+        name: expectedName,
+        values: [, [expectedSellIn, expectedQuality]],
+      } = expectedItem;
+      const item = updatedItems[i];
+      expect(item.name).toBe(expectedName);
+      expect(item.sellIn).toBe(expectedSellIn);
+      expect(item.quality).toBe(expectedQuality);
     });
+  });
+
+  it('outputs correctly', () => {
+    const spyOnConsoleLog = jest.spyOn(console, 'log');
+    spyOnConsoleLog.mockImplementation(() => {});
+
+    main();
+
+    expect(spyOnConsoleLog.mock.calls).toEqual([
+      ['OMGHAI!'],
+      ['\n-------- day 0 --------'],
+      ['name, sellIn, quality'],
+      ['+5 Dexterity Vest, 10, 20'],
+      ['Aged Brie, 2, 0'],
+      ['Elixir of the Mongoose, 5, 7'],
+      ['Sulfuras, Hand of Ragnaros, 0, 80'],
+      ['Sulfuras, Hand of Ragnaros, -1, 80'],
+      ['Backstage passes to a TAFKAL80ETC concert, 15, 20'],
+      ['Backstage passes to a TAFKAL80ETC concert, 10, 49'],
+      ['Backstage passes to a TAFKAL80ETC concert, 5, 49'],
+      ['Conjured Mana Cake, 3, 6'],
+      ['\n-------- day 1 --------'],
+      ['name, sellIn, quality'],
+      ['+5 Dexterity Vest, 10, 20'],
+      ['Aged Brie, 2, 0'],
+      ['Elixir of the Mongoose, 5, 7'],
+      ['Sulfuras, Hand of Ragnaros, 0, 80'],
+      ['Sulfuras, Hand of Ragnaros, -1, 80'],
+      ['Backstage passes to a TAFKAL80ETC concert, 15, 20'],
+      ['Backstage passes to a TAFKAL80ETC concert, 10, 49'],
+      ['Backstage passes to a TAFKAL80ETC concert, 5, 49'],
+      ['Conjured Mana Cake, 3, 6'],
+      ['\n-------- day 2 --------'],
+      ['name, sellIn, quality'],
+      ['+5 Dexterity Vest, 10, 20'],
+      ['Aged Brie, 2, 0'],
+      ['Elixir of the Mongoose, 5, 7'],
+      ['Sulfuras, Hand of Ragnaros, 0, 80'],
+      ['Sulfuras, Hand of Ragnaros, -1, 80'],
+      ['Backstage passes to a TAFKAL80ETC concert, 15, 20'],
+      ['Backstage passes to a TAFKAL80ETC concert, 10, 49'],
+      ['Backstage passes to a TAFKAL80ETC concert, 5, 49'],
+      ['Conjured Mana Cake, 3, 6'],
+    ]);
   });
 });
