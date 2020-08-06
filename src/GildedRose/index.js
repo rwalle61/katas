@@ -20,7 +20,7 @@ const keepQualityInValidRange = (quality) => {
   return quality;
 };
 
-const decrementSellIn = (sellBy) => sellBy - 1;
+const decrementSellIn = (sellIn) => sellIn - 1;
 
 const updateBackstagePassesQuality = (sellIn, quality) => {
   let newQuality = quality;
@@ -62,6 +62,24 @@ const updateAgedBrie = (item) =>
     updateAgedBrieQuality(item.sellIn, item.quality),
   );
 
+const updateConjuredItemQuality = (sellIn, quality) => {
+  let newQuality = quality;
+  if (sellIn > SELL_BY_DATE) {
+    newQuality -= 2;
+  } else {
+    newQuality -= 4;
+  }
+  newQuality = keepQualityInValidRange(newQuality);
+  return newQuality;
+};
+
+const updateConjuredItem = (item) =>
+  new Item(
+    item.name,
+    decrementSellIn(item.sellIn),
+    updateConjuredItemQuality(item.sellIn, item.quality),
+  );
+
 const updateGenericItemQuality = (sellIn, quality) => {
   let newQuality = quality;
   if (sellIn > SELL_BY_DATE) {
@@ -89,6 +107,9 @@ const updateItem = (item) => {
   }
   if (item.name === 'Aged Brie') {
     return updateAgedBrie(item);
+  }
+  if (item.name.startsWith('Conjured ')) {
+    return updateConjuredItem(item);
   }
   return updateGenericItem(item);
 };

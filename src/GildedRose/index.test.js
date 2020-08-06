@@ -149,7 +149,7 @@ describe('Shop.updateQuality()', () => {
         expect(item.quality).toBe(qualityOfLegendaryItem);
       });
     });
-    describe.skip('conjured items', () => {
+    describe('conjured items', () => {
       describe.each([['Conjured Mana Cake'], ['Conjured Item']])(
         '%s',
         (nameOfConjuredItem) => {
@@ -226,13 +226,13 @@ describe('Shop.updateQuality()', () => {
               [4, 50],
             ],
           },
-          // {
-          //   name: 'Conjured Mana Cake',
-          //   values: [
-          //     [3, 6],
-          //     [2, 4],
-          //   ],
-          // },
+          {
+            name: 'Conjured Mana Cake',
+            values: [
+              [3, 6],
+              [2, 4],
+            ],
+          },
         ];
 
         const items = expectedItems.map(
