@@ -6,61 +6,102 @@ export class Item {
   }
 }
 
+const MIN_QUALITY = 0;
+const MAX_QUALITY = 50;
+const SELL_BY_DATE = 0;
+
+const keepQualityInValidRange = (quality) => {
+  if (quality > MAX_QUALITY) {
+    return MAX_QUALITY;
+  }
+  if (quality < MIN_QUALITY) {
+    return MIN_QUALITY;
+  }
+  return quality;
+};
+
+const decrementSellIn = (sellBy) => sellBy - 1;
+
+const updateBackstagePassesQuality = (sellIn, quality) => {
+  let newQuality = quality;
+  if (sellIn > 10) {
+    newQuality += 1;
+  } else if (sellIn <= 10 && sellIn > 5) {
+    newQuality += 2;
+  } else if (sellIn <= 5 && sellIn > SELL_BY_DATE) {
+    newQuality += 3;
+  } else {
+    newQuality = MIN_QUALITY;
+  }
+  newQuality = keepQualityInValidRange(newQuality);
+  return newQuality;
+};
+
+const updateBackstagePasses = (item) =>
+  new Item(
+    item.name,
+    decrementSellIn(item.sellIn),
+    updateBackstagePassesQuality(item.sellIn, item.quality),
+  );
+
+const updateAgedBrieQuality = (sellIn, quality) => {
+  let newQuality = quality;
+  if (sellIn > SELL_BY_DATE) {
+    newQuality += 1;
+  } else {
+    newQuality += 2;
+  }
+  newQuality = keepQualityInValidRange(newQuality);
+  return newQuality;
+};
+
+const updateAgedBrie = (item) =>
+  new Item(
+    item.name,
+    decrementSellIn(item.sellIn),
+    updateAgedBrieQuality(item.sellIn, item.quality),
+  );
+
+const updateGenericItemQuality = (sellIn, quality) => {
+  let newQuality = quality;
+  if (sellIn > SELL_BY_DATE) {
+    newQuality -= 1;
+  } else {
+    newQuality -= 2;
+  }
+  newQuality = keepQualityInValidRange(newQuality);
+  return newQuality;
+};
+
+const updateGenericItem = (item) =>
+  new Item(
+    item.name,
+    decrementSellIn(item.sellIn),
+    updateGenericItemQuality(item.sellIn, item.quality),
+  );
+
+const updateItem = (item) => {
+  if (item.name === 'Sulfuras, Hand of Ragnaros') {
+    return item;
+  }
+  if (item.name === 'Backstage passes to a TAFKAL80ETC concert') {
+    return updateBackstagePasses(item);
+  }
+  if (item.name === 'Aged Brie') {
+    return updateAgedBrie(item);
+  }
+  return updateGenericItem(item);
+};
+
+const updateItems = (items) => items.map(updateItem);
+
 export class Shop {
   constructor(items = []) {
     this.items = items;
   }
 
   updateQuality() {
-    for (let i = 0; i < this.items.length; i += 1) {
-      if (
-        this.items[i].name !== 'Aged Brie' &&
-        this.items[i].name !== 'Backstage passes to a TAFKAL80ETC concert'
-      ) {
-        if (this.items[i].quality > 0) {
-          if (this.items[i].name !== 'Sulfuras, Hand of Ragnaros') {
-            this.items[i].quality -= 1;
-          }
-        }
-      } else if (this.items[i].quality < 50) {
-        this.items[i].quality += 1;
-        if (
-          this.items[i].name === 'Backstage passes to a TAFKAL80ETC concert'
-        ) {
-          if (this.items[i].sellIn < 11) {
-            if (this.items[i].quality < 50) {
-              this.items[i].quality += 1;
-            }
-          }
-          if (this.items[i].sellIn < 6) {
-            if (this.items[i].quality < 50) {
-              this.items[i].quality += 1;
-            }
-          }
-        }
-      }
-      if (this.items[i].name !== 'Sulfuras, Hand of Ragnaros') {
-        this.items[i].sellIn -= 1;
-      }
-      if (this.items[i].sellIn < 0) {
-        if (this.items[i].name !== 'Aged Brie') {
-          if (
-            this.items[i].name !== 'Backstage passes to a TAFKAL80ETC concert'
-          ) {
-            if (this.items[i].quality > 0) {
-              if (this.items[i].name !== 'Sulfuras, Hand of Ragnaros') {
-                this.items[i].quality -= 1;
-              }
-            }
-          } else {
-            this.items[i].quality = 0;
-          }
-        } else if (this.items[i].quality < 50) {
-          this.items[i].quality += 1;
-        }
-      }
-    }
-
+    this.items = updateItems(this.items);
     return this.items;
   }
 }
