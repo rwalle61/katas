@@ -17,7 +17,10 @@
   "husky": {
     "hooks": {}
   },
-  "dependencies": {},
+  "dependencies": {
+    "dateformat": "^3.0.3",
+    "lodash.clonedeep": "^4.5.0"
+  },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
