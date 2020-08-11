@@ -10,8 +10,6 @@
 
 This repo contains my solutions to clean code katas, for example some I've come across in Agile Technical Practices Distilled.
 
-The main branch is a JavaScript template for starting a new kata. The other branches contain the code for the katas - one branch per kata.
-
 ## Getting Started
 
 ```bash
@@ -24,4 +22,11 @@ yarn install
 
 ```bash
 yarn test # starts Jest watch mode
+```
+
+The solutions to some katas can be run in the terminal:
+
+```bash
+npm install -g ts-node
+ts-node ./src/<Kata>/main.ts
 ```
