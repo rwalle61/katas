@@ -1,14 +1,6 @@
 # Katas
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Getting Started](#getting-started)
-- [Running the Tests](#running-the-tests)
-
-## Overview
-
-This repo contains my solutions to clean code katas, for example some I've come across in Agile Technical Practices Distilled.
+Here are my solutions to clean code katas, such as those in Agile Technical Practices Distilled.
 
 ## Getting Started
 
