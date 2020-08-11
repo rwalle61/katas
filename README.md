@@ -28,5 +28,5 @@ The solutions to some katas can be run in the terminal:
 
 ```bash
 npm install -g ts-node
-ts-node ./src/<Kata>/main.ts
+ts-node ./src/<KATA>/main.ts
 ```
