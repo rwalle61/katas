@@ -20,4 +20,5 @@ yarn-error.log*
 public
 
 # exceptions
-src/GameOfLife/index.test.js
+src/GameOfLife/index.test.*
+src/GameOfLife/initialGridStrings.*
