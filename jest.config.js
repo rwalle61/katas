@@ -1,4 +1,5 @@
 module.exports = {
+  clearMocks: true,
   restoreMocks: true,
   coverageThreshold: {
     global: {

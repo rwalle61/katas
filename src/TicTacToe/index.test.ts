@@ -10,9 +10,6 @@ const mockInputImplementation = (returnValue) => () => {
 
 describe('Game', () => {
   describe('play()', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
     test.each([
       [
         'X wins',
