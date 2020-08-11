@@ -19,7 +19,9 @@
   },
   "dependencies": {
     "dateformat": "^3.0.3",
-    "lodash.clonedeep": "^4.5.0"
+    "lodash.chunk": "^4.2.0",
+    "lodash.clonedeep": "^4.5.0",
+    "readline-sync": "^1.4.10"
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.10.4",
