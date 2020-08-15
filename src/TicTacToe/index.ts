@@ -24,7 +24,6 @@ export default class Game {
     [Player.O]: [],
   };
 
-  // eslint-disable-next-line no-console
   constructor(input = readlineSync.question, output = console.log) {
     this.input = input;
     this.output = output;

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Item, Shop } from '.';
 
 export default () => {

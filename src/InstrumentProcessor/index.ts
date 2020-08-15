@@ -5,7 +5,6 @@ import {
 } from './types';
 
 const onError = () => {
-  // eslint-disable-next-line no-console
   console.error('Error occurred');
 };
 

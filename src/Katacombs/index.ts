@@ -30,7 +30,7 @@ export default class Game {
 
   constructor({
     input = readlineSync.promptCL,
-    output = console.log, // eslint-disable-line no-console
+    output = console.log,
     startingBag = new Bag(),
     startingLocation = new Start(),
     startingMap = new Map(),

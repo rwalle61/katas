@@ -10,14 +10,14 @@ const intervalBetweenFrames = 300;
 
 const main = async () => {
   let gridString = initialGridString;
-  /* eslint-disable no-console, no-constant-condition, no-await-in-loop */
+  /* eslint-disable no-constant-condition, no-await-in-loop */
   while (true) {
     console.clear();
     console.log(gridString);
     gridString = tick(gridString);
     await wait(intervalBetweenFrames);
   }
-  /* eslint-enable no-console, no-constant-condition, no-await-in-loop */
+  /* eslint-enable no-constant-condition, no-await-in-loop */
 };
 
 main();
