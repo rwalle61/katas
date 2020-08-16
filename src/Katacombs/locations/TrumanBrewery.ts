@@ -13,7 +13,7 @@ export default class TrumanBrewery extends Location {
   lookDescription =
     'I CAN SEE A BRICK BUILDING WITH A SIGN SAYING "TRUMAN BREWERY" AND A WOODEN WHITE DOOR.';
 
-  doorDirection = Direction.South;
+  doors = [{ name: 'DOOR', direction: Direction.South }];
 
   constructor(arg = defaultSettings) {
     super(arg);

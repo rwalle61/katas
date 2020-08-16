@@ -1,3 +1,6 @@
+import { Direction } from './Direction';
+import Location, { LocationConstructor } from '../locations/Location';
+
 export enum Command {
   Quit = 'QUIT',
   Help = 'HELP',
@@ -10,6 +13,23 @@ export enum Command {
   Use = 'USE',
 }
 
-export { default as Location } from '../locations/Location';
 export { ItemName } from './ItemName';
-export { Direction } from './Direction';
+export { ObjectName } from './ObjectName';
+
+export { Door } from './Door';
+
+export type Join = {
+  [direction in Direction]?: LocationConstructor;
+};
+
+export enum Axes {
+  NorthSouth = 'NorthSouth',
+  EastWest = 'EastWest',
+  UpDown = 'UpDown',
+}
+
+export type JoinsDirectory = {
+  [axis in Axes]?: Join[];
+};
+
+export { Direction, Location, LocationConstructor };

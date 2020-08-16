@@ -14,3 +14,14 @@ Other important aspects:
 - When looking somewhere without anything interesting, the system should reply, `Nothing interesting to look at there!`
 - When a general action is not available, the system will reply, `I can't do that here!`
 - When the system can't understand the command, it should prompt, `I don't understand that. English please!`
+
+Interesting challenges still to do:
+
+- refactor: follow the Law of Demeter strictly
+- refactor: allow Locations in the Map to initialised with custom settings (e.g. in tests, to load Items in convenient Locations)
+- test: add unit tests, but follow ATDD
+- feat: allow Items to be incremented in quantity, rather than each being treated as new
+- feat: allow Items to be Opened
+- feat: allow Items to be used differently in different places
+- feat: limit the Bag to 10 Items
+- feat: allow certain Items to disappear on use

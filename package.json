@@ -18,6 +18,8 @@
     "hooks": {}
   },
   "dependencies": {
+    "arr-flatten": "^1.1.0",
+    "array-unique": "^0.3.2",
     "dateformat": "^3.0.3",
     "lodash.chunk": "^4.2.0",
     "lodash.clonedeep": "^4.5.0",

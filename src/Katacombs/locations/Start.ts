@@ -7,7 +7,7 @@ export default class Start extends Location {
     'AROUND YOU IS A FOREST OF RESTAURANTS AND BARS. A SMALL STREAM OF CRAFTED BEER FLOWS OUT OF THE BUILDING AND DOWN A GULLY.',
   ].join('\n');
 
-  doorDirection = Direction.North;
+  doors = [{ name: 'DOOR', direction: Direction.North }];
 
   itemUsageRules = {
     COMPASS: () => 'THE COMPASS SPINS AND SPINS, FINALLY SETTLING NORTH',

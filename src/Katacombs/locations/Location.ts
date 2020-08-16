@@ -1,5 +1,6 @@
+import { ObjectName } from '../types/ObjectName';
+import { Door } from '../types/Door';
 import { Gold } from '../types/Gold';
-import { Direction } from '../types/Direction';
 import { ItemName } from '../types/ItemName';
 import Item from '../Item';
 
@@ -8,12 +9,16 @@ type LocationConstructorArgs = {
   gold?: Gold;
 };
 
+export type LocationConstructor = {
+  new (LocationConstructorArgs): Location;
+};
+
 export default class Location {
   description: string;
 
   lookDescription?: string;
 
-  doorDirection?: Direction;
+  doors: Door[] = [];
 
   protected items: Item[];
 
@@ -61,5 +66,9 @@ export default class Location {
 
   is(constructor): boolean {
     return constructor === this.constructor;
+  }
+
+  getOpenableObject(objectName: ObjectName) {
+    return this.doors.find((door) => door.name === objectName);
   }
 }

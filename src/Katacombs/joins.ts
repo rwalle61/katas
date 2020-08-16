@@ -1,8 +1,10 @@
-import { Direction } from './types/Direction';
+import unique from 'array-unique';
+import flatten from 'arr-flatten';
 import * as Locations from './locations';
+import { Location, Direction, Axes, JoinsDirectory, Join } from './types';
 
-const Joins = {
-  northSouth: [
+export const defaultJoins = {
+  [Axes.NorthSouth]: [
     {
       [Direction.North]: Locations.Start,
       [Direction.South]: Locations.BrickLaneMosque,
@@ -12,7 +14,7 @@ const Joins = {
       [Direction.South]: Locations.Start,
     },
   ],
-  eastWest: [
+  [Axes.EastWest]: [
     {
       [Direction.East]: Locations.Start,
       [Direction.West]: Locations.PulseCinema,
@@ -22,7 +24,7 @@ const Joins = {
       [Direction.West]: Locations.Start,
     },
   ],
-  upDown: [
+  [Axes.UpDown]: [
     {
       [Direction.Up]: Locations.TrumanBrewery1stFloor,
       [Direction.Down]: Locations.TrumanBrewery,
@@ -42,17 +44,22 @@ const Joins = {
   ],
 };
 
-export const getJoins = (directionToNextLocation: Direction) => {
-  if ([Direction.North, Direction.South].includes(directionToNextLocation)) {
-    return Joins.northSouth;
-  }
-  if ([Direction.East, Direction.West].includes(directionToNextLocation)) {
-    return Joins.eastWest;
-  }
-  return Joins.upDown;
+export const getLocations = (joins: JoinsDirectory) => {
+  const listOfJoins = flatten(Object.values(joins));
+  const locations = flatten(listOfJoins.map((join) => Object.values(join)));
+  return unique(locations);
 };
 
-const inverseDirection = {
+const DirectionToJoinAxis = {
+  [Direction.North]: Axes.NorthSouth,
+  [Direction.South]: Axes.NorthSouth,
+  [Direction.East]: Axes.EastWest,
+  [Direction.West]: Axes.EastWest,
+  [Direction.Up]: Axes.UpDown,
+  [Direction.Down]: Axes.UpDown,
+};
+
+const InverseDirection = {
   [Direction.North]: Direction.South,
   [Direction.South]: Direction.North,
   [Direction.East]: Direction.West,
@@ -61,7 +68,15 @@ const inverseDirection = {
   [Direction.Down]: Direction.Up,
 };
 
-export const findJoin = (joins, currentLocation, directionToNextLocation) =>
-  joins.find((join) =>
-    currentLocation.is(join[inverseDirection[directionToNextLocation]]),
+export const findJoin = (
+  joins: JoinsDirectory,
+  currentLocation: Location,
+  directionToNextLocation: Direction,
+): Join => {
+  const axis = DirectionToJoinAxis[directionToNextLocation];
+  const joinsAlongAxis = joins[axis];
+  const inverseDirection = InverseDirection[directionToNextLocation];
+  return joinsAlongAxis.find((join) =>
+    currentLocation.is(join[inverseDirection]),
   );
+};

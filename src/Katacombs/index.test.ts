@@ -6,6 +6,7 @@ import TrumanBrewery from './locations/TrumanBrewery';
 import TrumanBreweryBasement from './locations/TrumanBreweryBasement';
 import TrumanBreweryLair from './locations/TrumanBreweryLair';
 import TrumanBrewerySubLair from './locations/TrumanBrewerySubLair';
+import Map from './Map';
 
 const title = 'LOST IN SHOREDITCH.\n';
 const quitText = 'bye';
@@ -19,6 +20,7 @@ const newMockInput: (inputs: [...any[]], mockFunc?: jest.Mock) => jest.Mock = (
     ? newMockInput(rest, mockFunc.mockReturnValueOnce(input.split(' ')))
     : mockFunc.mockReturnValueOnce(['QUIT']);
 const output = jest.fn();
+const actualOutput = () => output.mock.calls.join('\n');
 
 describe('Game', () => {
   describe('QUIT', () => {
@@ -38,7 +40,7 @@ describe('Game', () => {
 
       game.play();
 
-      expect(output.mock.calls.join('\n')).toEqual(expectedOutput);
+      expect(actualOutput()).toEqual(expectedOutput);
     });
   });
   describe('HELP', () => {
@@ -48,12 +50,17 @@ describe('Game', () => {
         newMockInput(['HELP']),
         'GO [direction], LOOK [direction/item], OPEN [item], TAKE [item], DROP [item], BAG, USE [item]',
       ],
+      [
+        'displays help when entering unknown command',
+        newMockInput(['UNKNOWN_COMMAND']),
+        'GO [direction], LOOK [direction/item], OPEN [item], TAKE [item], DROP [item], BAG, USE [item]',
+      ],
     ])('%s', (_testName, input, expectedOutput) => {
       const game = new Game({ input, output });
 
       game.play();
 
-      expect(output.mock.calls.join('\n')).toEqual(
+      expect(actualOutput()).toEqual(
         [title, new Start().description, expectedOutput, quitText].join('\n'),
       );
     });
@@ -63,93 +70,132 @@ describe('Game', () => {
       [
         'North',
         newMockInput(['LOOK N']),
+        Start,
         'I CAN SEE A BRICK BUILDING WITH A SIGN SAYING "TRUMAN BREWERY" AND A WOODEN WHITE DOOR.',
       ],
       [
         'East',
         newMockInput(['LOOK E']),
+        Start,
         'I CAN SEE A GROUP OF NIMBLE BETHNELLIANS STRETCHING ON THE FLOOR.',
       ],
       [
         'South',
         newMockInput(['LOOK S']),
+        Start,
         'I CAN SEE PEOPLE IN ROBES STREAMING INTO A LARGE MOSQUE WITH A TALL MINARET.',
       ],
       [
         'West',
         newMockInput(['LOOK W']),
+        Start,
         "I CAN SEE A LARGE BOXY BUILDING WITH A BOLD SIGN SAYING 'PULSE'.",
       ],
-    ])('%s', (_testName, input, expectedOutput) => {
-      const game = new Game({ input, output });
+      [
+        'Up',
+        newMockInput(['LOOK UP']),
+        TrumanBrewery,
+        'I CAN SEE UPSTAIRS IN THE TRUMAN BREWERY.',
+      ],
+      [
+        'Down',
+        newMockInput(['LOOK DOWN']),
+        TrumanBrewery,
+        'I CAN SEE DOWNSTAIRS IN THE TRUMAN BREWERY.',
+      ],
+      [
+        'Unknown direction',
+        newMockInput(['LOOK FOO']),
+        Start,
+        'FOO: UNKNOWN DIRECTION',
+      ],
+      [
+        'Direction goes off the map',
+        newMockInput(['LOOK UP']),
+        Start,
+        'NOTHING TO SEE THERE!',
+      ],
+    ])('%s', (_testName, input, StartingLocation, expectedOutput) => {
+      const game = new Game({
+        input,
+        output,
+        map: new Map({ StartingLocation }),
+      });
 
       game.play();
 
-      expect(output.mock.calls.join('\n')).toEqual(
-        [title, new Start().description, expectedOutput, quitText].join('\n'),
+      expect(actualOutput()).toEqual(
+        [
+          title,
+          new StartingLocation().description,
+          expectedOutput,
+          quitText,
+        ].join('\n'),
       );
     });
   });
   describe('GO', () => {
-    describe('horizontally', () => {
-      it.each([
-        ['North', newMockInput(['GO N']), new TrumanBrewery().description],
-        [
-          'East',
-          newMockInput(['GO E']),
-          'YOU ARE STANDING AMONG A GROUP OF NIMBLE BETHNELLIANS STRETCHING ON THE FLOOR.',
-        ],
-        [
-          'South',
-          newMockInput(['GO S']),
-          'YOU ARE BY A LARGE MOSQUE, WITH PEOPLE IN ROBES WEAVING AROUND YOU.',
-        ],
-        [
-          'West',
-          newMockInput(['GO W']),
-          "YOU ARE STANDING BY A LARGE BOXY BUILDING WITH A BOLD SIGN SAYING 'PULSE'. INDEED, YOU HEAR FAINT PULSES FROM INSIDE IT.",
-        ],
-      ])('%s', (_testName, input, expectedOutput) => {
-        const game = new Game({ input, output });
-
-        game.play();
-
-        expect(output.mock.calls.join('\n')).toEqual(
-          [title, new Start().description, expectedOutput, quitText].join('\n'),
-        );
+    it.each([
+      ['North', newMockInput(['GO N']), Start, new TrumanBrewery().description],
+      [
+        'East',
+        newMockInput(['GO E']),
+        Start,
+        'YOU ARE STANDING AMONG A GROUP OF NIMBLE BETHNELLIANS STRETCHING ON THE FLOOR.',
+      ],
+      [
+        'South',
+        newMockInput(['GO S']),
+        Start,
+        'YOU ARE BY A LARGE MOSQUE, WITH PEOPLE IN ROBES WEAVING AROUND YOU.',
+      ],
+      [
+        'West',
+        newMockInput(['GO W']),
+        Start,
+        "YOU ARE STANDING BY A LARGE BOXY BUILDING WITH A BOLD SIGN SAYING 'PULSE'. INDEED, YOU HEAR FAINT PULSES FROM INSIDE IT.",
+      ],
+      [
+        'Up',
+        newMockInput(['GO UP']),
+        TrumanBrewery,
+        'YOU ARE UPSTAIRS IN THE TRUMAN BREWERY.',
+      ],
+      [
+        'Down',
+        newMockInput(['GO DOWN']),
+        TrumanBrewery,
+        'YOU ARE DOWNSTAIRS IN THE TRUMAN BREWERY.',
+      ],
+      [
+        'Unknown direction',
+        newMockInput(['GO FOO']),
+        Start,
+        'FOO: UNKNOWN DIRECTION',
+      ],
+      [
+        'Direction goes off the map',
+        newMockInput(['GO UP']),
+        Start,
+        "CAN'T GET THERE!",
+      ],
+    ])('%s', (_testName, input, StartingLocation, expectedOutput) => {
+      const game = new Game({
+        input,
+        output,
+        map: new Map({ StartingLocation }),
       });
-    });
 
-    describe('vertically', () => {
-      it.each([
+      game.play();
+
+      expect(actualOutput()).toEqual(
         [
-          'Up',
-          newMockInput(['GO UP']),
-          'YOU ARE UPSTAIRS IN THE TRUMAN BREWERY.',
-        ],
-        [
-          'Down',
-          newMockInput(['GO DOWN']),
-          'YOU ARE DOWNSTAIRS IN THE TRUMAN BREWERY.',
-        ],
-      ])('%s', (_testName, input, expectedOutput) => {
-        const game = new Game({
-          input,
-          output,
-          startingLocation: new TrumanBrewery(),
-        });
-
-        game.play();
-
-        expect(output.mock.calls.join('\n')).toEqual(
-          [
-            title,
-            new TrumanBrewery().description,
-            expectedOutput,
-            quitText,
-          ].join('\n'),
-        );
-      });
+          title,
+          new StartingLocation().description,
+          expectedOutput,
+          quitText,
+        ].join('\n'),
+      );
     });
 
     describe('mutually reversed references', () => {
@@ -157,34 +203,38 @@ describe('Game', () => {
         [
           'North',
           newMockInput(['GO N', 'GO S']),
-          new Start(),
+          Start,
           new TrumanBrewery().description,
         ],
         [
           'East',
           newMockInput(['GO E', 'GO W']),
-          new Start(),
+          Start,
           'YOU ARE STANDING AMONG A GROUP OF NIMBLE BETHNELLIANS STRETCHING ON THE FLOOR.',
         ],
         [
           'Up',
           newMockInput(['GO UP', 'GO DOWN']),
-          new TrumanBrewery(),
+          TrumanBrewery,
           'YOU ARE UPSTAIRS IN THE TRUMAN BREWERY.',
         ],
       ])(
         '%s and back',
-        (_testName, input, startingLocation, expectedOutput) => {
-          const game = new Game({ input, output, startingLocation });
+        (_testName, input, StartingLocation, expectedOutput) => {
+          const game = new Game({
+            input,
+            output,
+            map: new Map({ StartingLocation }),
+          });
 
           game.play();
 
-          expect(output.mock.calls.join('\n')).toEqual(
+          expect(actualOutput()).toEqual(
             [
               title,
-              startingLocation.description,
+              new StartingLocation().description,
               expectedOutput,
-              startingLocation.description,
+              new StartingLocation().description,
               quitText,
             ].join('\n'),
           );
@@ -197,7 +247,7 @@ describe('Game', () => {
         [
           'location without gold',
           newMockInput(['GO N', 'BAG']),
-          new Start(),
+          Start,
           [new TrumanBrewery().description, 'THE BAG CONTAINS: KEYS'].join(
             '\n',
           ),
@@ -205,7 +255,7 @@ describe('Game', () => {
         [
           'location with gold',
           newMockInput(['GO DOWN', 'BAG']),
-          new TrumanBreweryBasement(),
+          TrumanBreweryBasement,
           [
             new TrumanBreweryLair().description,
             'YOU FIND 5 GOLD!',
@@ -215,7 +265,7 @@ describe('Game', () => {
         [
           'location with different amount of gold',
           newMockInput(['GO DOWN', 'BAG']),
-          new TrumanBreweryLair(),
+          TrumanBreweryLair,
           [
             new TrumanBrewerySubLair().description,
             'YOU FIND 6 GOLD!',
@@ -225,7 +275,7 @@ describe('Game', () => {
         [
           'returning to a location that no longer has gold',
           newMockInput(['GO DOWN', 'GO UP', 'GO DOWN', 'BAG']),
-          new TrumanBreweryBasement(),
+          TrumanBreweryBasement,
           [
             new TrumanBreweryLair().description,
             'YOU FIND 5 GOLD!',
@@ -234,20 +284,23 @@ describe('Game', () => {
             'THE BAG CONTAINS: KEYS, 5 GOLD',
           ].join('\n'),
         ],
-      ])('%s', (_testName, input, startingLocation, expectedOutput) => {
+      ])('%s', (_testName, input, StartingLocation, expectedOutput) => {
         const game = new Game({
           input,
           output,
-          startingLocation,
-          startingBag: new Bag(new Item('KEYS')),
+          map: new Map({ StartingLocation }),
+          bag: new Bag(new Item('KEYS')),
         });
 
         game.play();
 
-        expect(output.mock.calls.join('\n')).toEqual(
-          [title, startingLocation.description, expectedOutput, quitText].join(
-            '\n',
-          ),
+        expect(actualOutput()).toEqual(
+          [
+            title,
+            new StartingLocation().description,
+            expectedOutput,
+            quitText,
+          ].join('\n'),
         );
       });
     });
@@ -257,24 +310,43 @@ describe('Game', () => {
       [
         '= GO when the object is a door',
         newMockInput(['OPEN DOOR']),
-        new Start(),
+        Start,
         new TrumanBrewery().description,
       ],
       [
         '= GO when the object is a door in a different direction',
         newMockInput(['OPEN DOOR']),
-        new TrumanBrewery(),
+        TrumanBrewery,
         new Start().description,
       ],
-    ])('%s', (_testName, input, startingLocation, expectedOutput) => {
-      const game = new Game({ input, output, startingLocation });
+      [
+        'does nothing when the object is not in the environment',
+        newMockInput(['OPEN FOO']),
+        Start,
+        'NO FOO TO OPEN!',
+      ],
+      [
+        'does nothing when no openable objects are in the environment',
+        newMockInput(['OPEN FOO']),
+        TrumanBreweryBasement,
+        'NO FOO TO OPEN!',
+      ],
+    ])('%s', (_testName, input, StartingLocation, expectedOutput) => {
+      const game = new Game({
+        input,
+        output,
+        map: new Map({ StartingLocation }),
+      });
 
       game.play();
 
-      expect(output.mock.calls.join('\n')).toEqual(
-        [title, startingLocation.description, expectedOutput, quitText].join(
-          '\n',
-        ),
+      expect(actualOutput()).toEqual(
+        [
+          title,
+          new StartingLocation().description,
+          expectedOutput,
+          quitText,
+        ].join('\n'),
       );
     });
   });
@@ -286,7 +358,7 @@ describe('Game', () => {
 
         game.play();
 
-        expect(output.mock.calls.join('\n')).toEqual(
+        expect(actualOutput()).toEqual(
           [title, new Start().description, expectedOutput, quitText].join('\n'),
         );
       },
@@ -310,12 +382,12 @@ describe('Game', () => {
         new Bag(new Item('SOME KEYS'), new Item('A COMPASS')),
         'THE BAG CONTAINS: SOME KEYS, A COMPASS',
       ],
-    ])('%s', (_testName, input, startingBag, expectedOutput) => {
-      const game = new Game({ input, output, startingBag });
+    ])('%s', (_testName, input, bag, expectedOutput) => {
+      const game = new Game({ input, output, bag });
 
       game.play();
 
-      expect(output.mock.calls.join('\n')).toEqual(
+      expect(actualOutput()).toEqual(
         [title, new Start().description, expectedOutput, quitText].join('\n'),
       );
     });
@@ -360,12 +432,12 @@ describe('Game', () => {
       const game = new Game({
         input,
         output,
-        startingLocation: new TrumanBrewery(),
+        map: new Map({ StartingLocation: TrumanBrewery }),
       });
 
       game.play();
 
-      expect(output.mock.calls.join('\n')).toEqual(
+      expect(actualOutput()).toEqual(
         [title, new TrumanBrewery().description, expectedOutput, quitText].join(
           '\n',
         ),
@@ -398,16 +470,16 @@ describe('Game', () => {
         new Bag(),
         'NO KEYS IN BAG',
       ],
-    ])('%s', (_testName, input, startingBag, expectedOutput) => {
+    ])('%s', (_testName, input, bag, expectedOutput) => {
       const game = new Game({
         input,
         output,
-        startingBag,
+        bag,
       });
 
       game.play();
 
-      expect(output.mock.calls.join('\n')).toEqual(
+      expect(actualOutput()).toEqual(
         [title, new Start().description, expectedOutput, quitText].join('\n'),
       );
     });
@@ -418,49 +490,49 @@ describe('Game', () => {
         'item that can be used here',
         newMockInput(['USE KEYS']),
         new Bag(new Item('KEYS')),
-        new TrumanBreweryBasement(),
+        TrumanBreweryBasement,
         'THE TRAP DOOR HAS BEEN UNLOCKED!',
       ],
       [
         'different item that can be used here',
         newMockInput(['USE COMPASS']),
         new Bag(new Item('COMPASS')),
-        new Start(),
+        Start,
         'THE COMPASS SPINS AND SPINS, FINALLY SETTLING NORTH',
       ],
       [
         "item that can't be used here",
         newMockInput(['USE KEYS']),
         new Bag(new Item('KEYS')),
-        new Start(),
+        Start,
         'KEYS CANNOT BE USED HERE.',
       ],
       [
         "item that isn't in bag",
         newMockInput(['USE KEYS']),
         new Bag(),
-        new Start(),
+        Start,
         'NO KEYS IN BAG',
       ],
-    ])(
-      '%s',
-      (_testName, input, startingBag, startingLocation, expectedOutput) => {
-        const game = new Game({
-          input,
-          output,
-          startingBag,
-          startingLocation,
-        });
+    ])('%s', (_testName, input, bag, StartingLocation, expectedOutput) => {
+      const game = new Game({
+        input,
+        output,
+        bag,
+        map: new Map({ StartingLocation }),
+      });
 
-        game.play();
+      game.play();
 
-        expect(output.mock.calls.join('\n')).toEqual(
-          [title, startingLocation.description, expectedOutput, quitText].join(
-            '\n',
-          ),
-        );
-      },
-    );
+      expect(actualOutput()).toEqual(
+        [
+          title,
+          new StartingLocation().description,
+          expectedOutput,
+          quitText,
+        ].join('\n'),
+      );
+    });
   });
   describe('INTEGRATION: TAKE, MOVE, DROP', () => {
     it.each([
@@ -472,16 +544,16 @@ describe('Game', () => {
           '\n',
         ),
       ],
-    ])('%s', (_testName, input, startingBag, expectedOutput) => {
+    ])('%s', (_testName, input, bag, expectedOutput) => {
       const game = new Game({
         input,
         output,
-        startingBag,
+        bag,
       });
 
       game.play();
 
-      expect(output.mock.calls.join('\n')).toEqual(
+      expect(actualOutput()).toEqual(
         [title, new Start().description, expectedOutput, quitText].join('\n'),
       );
     });
