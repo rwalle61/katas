@@ -35,7 +35,6 @@ export default class Game {
     this.input = input;
     this.output = output;
     this.currentLocation = map.getStartingLocation();
-    console.log(this.currentLocation);
     this.map = map;
     this.bag = bag;
   }
