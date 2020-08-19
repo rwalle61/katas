@@ -1,6 +1,6 @@
-import { Gold } from './types/Gold';
 import { ItemName } from './types/ItemName';
-import Item from './Item';
+import Item from './items/Item';
+import Gold from './items/Gold';
 
 type BagConstructorArgs = {
   items?: Item[];
@@ -43,8 +43,13 @@ export default class Bag {
     );
   }
 
-  addGold(amount: Gold): void {
-    this.add(new Item(`${amount} GOLD`));
+  addGold(amount: number): void {
+    const gold = this.find(Gold.name) as Gold;
+    if (gold) {
+      gold.increment(amount);
+      return;
+    }
+    this.add(new Gold(amount));
   }
 
   find(itemName: ItemName): Item {

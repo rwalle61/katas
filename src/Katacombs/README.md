@@ -19,7 +19,6 @@ Interesting challenges still to do:
 
 - refactor: follow the Law of Demeter strictly
 - test: add unit tests, but follow ATDD
-- feat: allow Items to be incremented in quantity, rather than each being treated as new
 - feat: allow Items to be Opened
 - feat: allow Items to be used differently in different places
 - feat: allow certain Items to disappear on use

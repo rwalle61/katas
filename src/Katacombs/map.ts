@@ -3,14 +3,13 @@ import {
   Direction,
   Location as ILocation,
   LocationConstructor,
-  Gold,
 } from './types';
 import { defaultJoins, getLocations, findJoin } from './joins';
 import { Start } from './locations';
-import Item from './Item';
+import Item from './items/Item';
 
 type ItemMap = {
-  [Location in LocationConstructor['name']]: { items?: Item[]; gold?: Gold };
+  [Location in LocationConstructor['name']]: { items?: Item[]; gold?: number };
 };
 
 type MapConstructorArgs = {

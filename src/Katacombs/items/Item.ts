@@ -1,14 +1,14 @@
-import { ItemName } from './types/ItemName';
+import { ItemName } from '../types/ItemName';
 
 export default class Item {
-  private name: ItemName;
+  protected name: ItemName;
 
   constructor(name: ItemName) {
     this.name = name;
   }
 
   toString(): string {
-    return this.name;
+    return this.name.toUpperCase();
   }
 
   is(itemName: ItemName): boolean {

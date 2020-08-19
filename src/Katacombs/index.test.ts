@@ -1,10 +1,13 @@
 import Game from '.';
 import Bag from './Bag';
-import Item from './Item';
-import Start from './locations/Start';
-import TrumanBrewery from './locations/TrumanBrewery';
-import TrumanBreweryBasement from './locations/TrumanBreweryBasement';
+import Item from './items/Item';
 import Map from './Map';
+import {
+  Start,
+  TrumanBrewery,
+  TrumanBreweryBasement,
+  TrumanBrewery1stFloor,
+} from './locations';
 
 const title = 'LOST IN SHOREDITCH.\n';
 const quitText = 'bye';
@@ -280,6 +283,18 @@ describe('Game', () => {
             new Start().description,
             new TrumanBrewery().description,
             'THE BAG CONTAINS: KEYS, 5 GOLD',
+          ].join('\n'),
+        ],
+        [
+          'collecting gold multiple times',
+          newMockInput(['GO N', 'GO UP', 'BAG']),
+          { TrumanBrewery: { gold: 5 }, TrumanBrewery1stFloor: { gold: 1 } },
+          [
+            new TrumanBrewery().description,
+            'YOU FIND 5 GOLD!',
+            new TrumanBrewery1stFloor().description,
+            'YOU FIND 1 GOLD!',
+            'THE BAG CONTAINS: KEYS, 6 GOLD',
           ].join('\n'),
         ],
       ])('%s', (_testName, input, itemMap, expectedOutput) => {
@@ -574,7 +589,7 @@ describe('Game', () => {
       },
     );
   });
-  describe('INTEGRATION: TAKE, MOVE, DROP', () => {
+  describe('INTEGRATION: TAKE + DROP', () => {
     it.each([
       [
         'cannot take, drop, take, cannot take',

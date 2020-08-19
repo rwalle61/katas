@@ -1,12 +1,11 @@
 import { ObjectName } from '../types/ObjectName';
 import { Door } from '../types/Door';
-import { Gold } from '../types/Gold';
 import { ItemName } from '../types/ItemName';
-import Item from '../Item';
+import Item from '../items/Item';
 
 type LocationConstructorArgs = {
   items?: Item[];
-  gold?: Gold;
+  gold?: number;
 };
 
 export type LocationConstructor = {
@@ -22,7 +21,7 @@ export default class Location {
 
   protected items: Item[];
 
-  protected gold?: Gold;
+  protected gold?: number;
 
   protected itemUsageRules: {};
 
@@ -43,7 +42,7 @@ export default class Location {
     return this.items.find((item) => item.is(itemName));
   }
 
-  takeGold(): Gold {
+  takeGold(): number {
     const { gold } = this;
     this.gold = 0;
     return gold;
