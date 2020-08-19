@@ -129,6 +129,10 @@ export default class Game {
     }
     const useText = this.currentLocation.use(item);
     this.output(useText);
+    item.use();
+    if (item.hasDegraded()) {
+      this.bag.remove(itemName);
+    }
   }
 
   private handleHelp() {

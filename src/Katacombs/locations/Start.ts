@@ -11,5 +11,6 @@ export default class Start extends Location {
 
   itemUsageRules = {
     COMPASS: () => 'THE COMPASS SPINS AND SPINS, FINALLY SETTLING NORTH',
+    'CHIP-SHOP-CHIPS': () => 'YUMMMMY',
   };
 }

@@ -553,6 +553,16 @@ describe('Game', () => {
         'THE COMPASS SPINS AND SPINS, FINALLY SETTLING NORTH',
       ],
       [
+        'item that can be used infinite times',
+        newMockInput(['USE COMPASS', 'USE COMPASS']),
+        [new Item('COMPASS')],
+        Start,
+        [
+          'THE COMPASS SPINS AND SPINS, FINALLY SETTLING NORTH',
+          'THE COMPASS SPINS AND SPINS, FINALLY SETTLING NORTH',
+        ].join('\n'),
+      ],
+      [
         "item that can't be used here",
         newMockInput(['USE KEYS']),
         [new Item('KEYS')],
@@ -565,6 +575,13 @@ describe('Game', () => {
         [],
         Start,
         'NO KEYS IN BAG',
+      ],
+      [
+        'item that disappears after use',
+        newMockInput(['USE CHIP-SHOP-CHIPS', 'USE CHIP-SHOP-CHIPS']),
+        [new Item('CHIP-SHOP-CHIPS', 1)],
+        Start,
+        ['YUMMMMY', 'NO CHIP-SHOP-CHIPS IN BAG'].join('\n'),
       ],
     ])(
       '%s',

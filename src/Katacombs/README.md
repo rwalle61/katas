@@ -21,4 +21,3 @@ Interesting challenges still to do:
 - test: add unit tests, but follow ATDD
 - feat: allow Items to be Opened
 - feat: allow Items to be used differently in different places
-- feat: allow certain Items to disappear on use
