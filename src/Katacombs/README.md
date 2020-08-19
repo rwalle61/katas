@@ -18,7 +18,6 @@ Other important aspects:
 Interesting challenges still to do:
 
 - refactor: follow the Law of Demeter strictly
-- refactor: allow Locations in the Map to initialised with custom settings (e.g. in tests, to load Items in convenient Locations)
 - test: add unit tests, but follow ATDD
 - feat: allow Items to be incremented in quantity, rather than each being treated as new
 - feat: allow Items to be Opened

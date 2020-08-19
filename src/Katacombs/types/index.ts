@@ -15,7 +15,7 @@ export enum Command {
 
 export { ItemName } from './ItemName';
 export { ObjectName } from './ObjectName';
-
+export { Gold } from './Gold';
 export { Door } from './Door';
 
 export type Join = {

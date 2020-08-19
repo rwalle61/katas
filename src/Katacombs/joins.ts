@@ -1,7 +1,14 @@
 import unique from 'array-unique';
 import flatten from 'arr-flatten';
 import * as Locations from './locations';
-import { Location, Direction, Axes, JoinsDirectory, Join } from './types';
+import {
+  Location,
+  LocationConstructor,
+  Direction,
+  Axes,
+  JoinsDirectory,
+  Join,
+} from './types';
 
 export const defaultJoins = {
   [Axes.NorthSouth]: [
@@ -44,7 +51,7 @@ export const defaultJoins = {
   ],
 };
 
-export const getLocations = (joins: JoinsDirectory) => {
+export const getLocations = (joins: JoinsDirectory): LocationConstructor[] => {
   const listOfJoins = flatten(Object.values(joins));
   const locations = flatten(listOfJoins.map((join) => Object.values(join)));
   return unique(locations);

@@ -3,13 +3,20 @@ import {
   Direction,
   Location as ILocation,
   LocationConstructor,
+  Gold,
 } from './types';
 import { defaultJoins, getLocations, findJoin } from './joins';
 import { Start } from './locations';
+import Item from './Item';
+
+type ItemMap = {
+  [Location in LocationConstructor['name']]: { items?: Item[]; gold?: Gold };
+};
 
 type MapConstructorArgs = {
   joins?: JoinsDirectory;
   StartingLocation?: LocationConstructor;
+  itemMap?: ItemMap;
 };
 
 export default class Map {
@@ -22,14 +29,17 @@ export default class Map {
   constructor({
     joins = defaultJoins,
     StartingLocation = Start,
+    itemMap = {},
   }: MapConstructorArgs = {}) {
-    this.initialiseLocations(joins);
+    this.initialiseLocations(joins, itemMap);
     this.joins = joins;
     this.StartingLocation = StartingLocation;
   }
 
-  initialiseLocations(joins) {
-    this.locations = getLocations(joins).map((Location) => new Location());
+  initialiseLocations(joins: JoinsDirectory, itemMap: ItemMap) {
+    this.locations = getLocations(joins).map(
+      (Location) => new Location(itemMap[Location.name]),
+    );
   }
 
   getLocation(locationConstructor: LocationConstructor): ILocation {

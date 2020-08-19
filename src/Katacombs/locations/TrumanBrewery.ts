@@ -1,10 +1,5 @@
-import Item from '../Item';
 import { Direction } from '../types';
-
 import Location from './Location';
-
-const defaultItems = [new Item('KEYS'), new Item('COMPASS')];
-const defaultSettings = { items: defaultItems };
 
 export default class TrumanBrewery extends Location {
   description =
@@ -14,8 +9,4 @@ export default class TrumanBrewery extends Location {
     'I CAN SEE A BRICK BUILDING WITH A SIGN SAYING "TRUMAN BREWERY" AND A WOODEN WHITE DOOR.';
 
   doors = [{ name: 'DOOR', direction: Direction.South }];
-
-  constructor(arg = defaultSettings) {
-    super(arg);
-  }
 }

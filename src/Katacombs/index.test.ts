@@ -4,8 +4,6 @@ import Item from './Item';
 import Start from './locations/Start';
 import TrumanBrewery from './locations/TrumanBrewery';
 import TrumanBreweryBasement from './locations/TrumanBreweryBasement';
-import TrumanBreweryLair from './locations/TrumanBreweryLair';
-import TrumanBrewerySubLair from './locations/TrumanBrewerySubLair';
 import Map from './Map';
 
 const title = 'LOST IN SHOREDITCH.\n';
@@ -247,60 +245,55 @@ describe('Game', () => {
         [
           'location without gold',
           newMockInput(['GO N', 'BAG']),
-          Start,
+          { TrumanBrewery: { gold: 0 } },
           [new TrumanBrewery().description, 'THE BAG CONTAINS: KEYS'].join(
             '\n',
           ),
         ],
         [
           'location with gold',
-          newMockInput(['GO DOWN', 'BAG']),
-          TrumanBreweryBasement,
+          newMockInput(['GO N', 'BAG']),
+          { TrumanBrewery: { gold: 5 } },
           [
-            new TrumanBreweryLair().description,
+            new TrumanBrewery().description,
             'YOU FIND 5 GOLD!',
             'THE BAG CONTAINS: KEYS, 5 GOLD',
           ].join('\n'),
         ],
         [
           'location with different amount of gold',
-          newMockInput(['GO DOWN', 'BAG']),
-          TrumanBreweryLair,
+          newMockInput(['GO N', 'BAG']),
+          { TrumanBrewery: { gold: 6 } },
           [
-            new TrumanBrewerySubLair().description,
+            new TrumanBrewery().description,
             'YOU FIND 6 GOLD!',
             'THE BAG CONTAINS: KEYS, 6 GOLD',
           ].join('\n'),
         ],
         [
           'returning to a location that no longer has gold',
-          newMockInput(['GO DOWN', 'GO UP', 'GO DOWN', 'BAG']),
-          TrumanBreweryBasement,
+          newMockInput(['GO N', 'GO S', 'GO N', 'BAG']),
+          { TrumanBrewery: { gold: 5 } },
           [
-            new TrumanBreweryLair().description,
+            new TrumanBrewery().description,
             'YOU FIND 5 GOLD!',
-            new TrumanBreweryBasement().description,
-            new TrumanBreweryLair().description,
+            new Start().description,
+            new TrumanBrewery().description,
             'THE BAG CONTAINS: KEYS, 5 GOLD',
           ].join('\n'),
         ],
-      ])('%s', (_testName, input, StartingLocation, expectedOutput) => {
+      ])('%s', (_testName, input, itemMap, expectedOutput) => {
         const game = new Game({
           input,
           output,
-          map: new Map({ StartingLocation }),
+          map: new Map({ itemMap }),
           bag: new Bag(new Item('KEYS')),
         });
 
         game.play();
 
         expect(actualOutput()).toEqual(
-          [
-            title,
-            new StartingLocation().description,
-            expectedOutput,
-            quitText,
-          ].join('\n'),
+          [title, new Start().description, expectedOutput, quitText].join('\n'),
         );
       });
     });
@@ -432,15 +425,17 @@ describe('Game', () => {
       const game = new Game({
         input,
         output,
-        map: new Map({ StartingLocation: TrumanBrewery }),
+        map: new Map({
+          itemMap: {
+            Start: { items: [new Item('KEYS'), new Item('COMPASS')] },
+          },
+        }),
       });
 
       game.play();
 
       expect(actualOutput()).toEqual(
-        [title, new TrumanBrewery().description, expectedOutput, quitText].join(
-          '\n',
-        ),
+        [title, new Start().description, expectedOutput, quitText].join('\n'),
       );
     });
   });
