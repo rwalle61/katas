@@ -2,13 +2,25 @@ import { Gold } from './types/Gold';
 import { ItemName } from './types/ItemName';
 import Item from './Item';
 
+type BagConstructorArgs = {
+  items?: Item[];
+  capacity?: number;
+};
+
 const emptyBagText = 'THE BAG IS EMPTY. IT LOOKS BIG ENOUGH FOR 10 ITEMS';
+const defaultCapacity = 10;
 
 export default class Bag {
-  private items = [];
+  private items: Item[];
 
-  constructor(...items) {
+  private capacity: number;
+
+  constructor({
+    items = [],
+    capacity = defaultCapacity,
+  }: BagConstructorArgs = {}) {
     this.items = items;
+    this.capacity = capacity;
   }
 
   static getItemNotFoundText(itemName: ItemName): string {
@@ -27,7 +39,7 @@ export default class Bag {
 
   remove(itemName: ItemName): void {
     this.items = this.items.filter(
-      (existingItem) => existingItem.name !== itemName,
+      (existingItem) => !existingItem.is(itemName),
     );
   }
 
@@ -41,5 +53,9 @@ export default class Bag {
 
   toString(): string {
     return this.items.length ? this.getBagContents() : emptyBagText;
+  }
+
+  isFull(): boolean {
+    return this.items.length >= this.capacity;
   }
 }

@@ -92,11 +92,16 @@ export default class Game {
   }
 
   private handleTake(itemName: ItemName) {
-    const item = this.currentLocation.take(itemName);
+    const item = this.currentLocation.find(itemName);
     if (!item) {
       this.output(`NO ${itemName} HERE!`);
       return;
     }
+    if (this.bag.isFull()) {
+      this.output('THE BAG IS FULL!');
+      return;
+    }
+    this.currentLocation.remove(itemName);
     this.bag.add(item);
     this.output(`${itemName}: TAKEN`);
   }

@@ -22,5 +22,4 @@ Interesting challenges still to do:
 - feat: allow Items to be incremented in quantity, rather than each being treated as new
 - feat: allow Items to be Opened
 - feat: allow Items to be used differently in different places
-- feat: limit the Bag to 10 Items
 - feat: allow certain Items to disappear on use

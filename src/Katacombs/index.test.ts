@@ -287,7 +287,7 @@ describe('Game', () => {
           input,
           output,
           map: new Map({ itemMap }),
-          bag: new Bag(new Item('KEYS')),
+          bag: new Bag({ items: [new Item('KEYS')] }),
         });
 
         game.play();
@@ -360,23 +360,27 @@ describe('Game', () => {
       [
         'item in bag',
         newMockInput(['BAG']),
-        new Bag(new Item('SOME KEYS')),
+        [new Item('SOME KEYS')],
         'THE BAG CONTAINS: SOME KEYS',
       ],
       [
         'different item in bag',
         newMockInput(['BAG']),
-        new Bag(new Item('A COMPASS')),
+        [new Item('A COMPASS')],
         'THE BAG CONTAINS: A COMPASS',
       ],
       [
         'multiple items in bag',
         newMockInput(['BAG']),
-        new Bag(new Item('SOME KEYS'), new Item('A COMPASS')),
+        [new Item('SOME KEYS'), new Item('A COMPASS')],
         'THE BAG CONTAINS: SOME KEYS, A COMPASS',
       ],
-    ])('%s', (_testName, input, bag, expectedOutput) => {
-      const game = new Game({ input, output, bag });
+    ])('%s', (_testName, input, startingItems, expectedOutput) => {
+      const game = new Game({
+        input,
+        output,
+        bag: new Bag({ items: startingItems }),
+      });
 
       game.play();
 
@@ -438,38 +442,76 @@ describe('Game', () => {
         [title, new Start().description, expectedOutput, quitText].join('\n'),
       );
     });
+
+    it.each([
+      [
+        'cannot take more items when bag is full',
+        newMockInput(['TAKE KEYS', 'BAG', 'TAKE KEYS']),
+        1,
+        [
+          'THE BAG IS FULL!',
+          'THE BAG CONTAINS: SOMETHING',
+          'THE BAG IS FULL!',
+        ].join('\n'),
+      ],
+      [
+        'cannot take more items when bag is full (default capacity = 10)',
+        newMockInput(['TAKE KEYS', 'BAG', 'TAKE KEYS']),
+        10,
+        [
+          'THE BAG IS FULL!',
+          'THE BAG CONTAINS: SOMETHING, SOMETHING, SOMETHING, SOMETHING, SOMETHING, SOMETHING, SOMETHING, SOMETHING, SOMETHING, SOMETHING',
+          'THE BAG IS FULL!',
+        ].join('\n'),
+      ],
+    ])('%s', (_testName, input, bagCapacity, expectedOutput) => {
+      const game = new Game({
+        input,
+        output,
+        bag: new Bag({
+          items: [...Array(bagCapacity).fill(new Item('SOMETHING'))],
+          capacity: bagCapacity,
+        }),
+        map: new Map({
+          itemMap: {
+            Start: { items: [new Item('KEYS')] },
+          },
+        }),
+      });
+
+      game.play();
+
+      expect(actualOutput()).toEqual(
+        [title, new Start().description, expectedOutput, quitText].join('\n'),
+      );
+    });
   });
   describe('DROP', () => {
     it.each([
       [
         'item',
         newMockInput(['DROP KEYS', 'BAG']),
-        new Bag(new Item('KEYS')),
+        [new Item('KEYS')],
         ['KEYS: DROPPED', emptyBagText].join('\n'),
       ],
       [
         'different item',
         newMockInput(['DROP COMPASS', 'BAG']),
-        new Bag(new Item('COMPASS')),
+        [new Item('COMPASS')],
         ['COMPASS: DROPPED', emptyBagText].join('\n'),
       ],
       [
         'item remaining in bag',
         newMockInput(['DROP COMPASS', 'BAG']),
-        new Bag(new Item('KEYS'), new Item('COMPASS')),
+        [new Item('KEYS'), new Item('COMPASS')],
         ['COMPASS: DROPPED', 'THE BAG CONTAINS: KEYS'].join('\n'),
       ],
-      [
-        'item not in bag',
-        newMockInput(['DROP KEYS']),
-        new Bag(),
-        'NO KEYS IN BAG',
-      ],
-    ])('%s', (_testName, input, bag, expectedOutput) => {
+      ['item not in bag', newMockInput(['DROP KEYS']), [], 'NO KEYS IN BAG'],
+    ])('%s', (_testName, input, startingItems, expectedOutput) => {
       const game = new Game({
         input,
         output,
-        bag,
+        bag: new Bag({ items: startingItems }),
       });
 
       game.play();
@@ -484,66 +526,69 @@ describe('Game', () => {
       [
         'item that can be used here',
         newMockInput(['USE KEYS']),
-        new Bag(new Item('KEYS')),
+        [new Item('KEYS')],
         TrumanBreweryBasement,
         'THE TRAP DOOR HAS BEEN UNLOCKED!',
       ],
       [
         'different item that can be used here',
         newMockInput(['USE COMPASS']),
-        new Bag(new Item('COMPASS')),
+        [new Item('COMPASS')],
         Start,
         'THE COMPASS SPINS AND SPINS, FINALLY SETTLING NORTH',
       ],
       [
         "item that can't be used here",
         newMockInput(['USE KEYS']),
-        new Bag(new Item('KEYS')),
+        [new Item('KEYS')],
         Start,
         'KEYS CANNOT BE USED HERE.',
       ],
       [
         "item that isn't in bag",
         newMockInput(['USE KEYS']),
-        new Bag(),
+        [],
         Start,
         'NO KEYS IN BAG',
       ],
-    ])('%s', (_testName, input, bag, StartingLocation, expectedOutput) => {
-      const game = new Game({
-        input,
-        output,
-        bag,
-        map: new Map({ StartingLocation }),
-      });
+    ])(
+      '%s',
+      (_testName, input, startingItems, StartingLocation, expectedOutput) => {
+        const game = new Game({
+          input,
+          output,
+          bag: new Bag({ items: startingItems }),
+          map: new Map({ StartingLocation }),
+        });
 
-      game.play();
+        game.play();
 
-      expect(actualOutput()).toEqual(
-        [
-          title,
-          new StartingLocation().description,
-          expectedOutput,
-          quitText,
-        ].join('\n'),
-      );
-    });
+        expect(actualOutput()).toEqual(
+          [
+            title,
+            new StartingLocation().description,
+            expectedOutput,
+            quitText,
+          ].join('\n'),
+        );
+      },
+    );
   });
   describe('INTEGRATION: TAKE, MOVE, DROP', () => {
     it.each([
       [
         'cannot take, drop, take, cannot take',
         newMockInput(['TAKE KEYS', 'DROP KEYS', 'TAKE KEYS', 'TAKE KEYS']),
-        new Bag(new Item('KEYS')),
+        [new Item('KEYS')],
         ['NO KEYS HERE!', 'KEYS: DROPPED', 'KEYS: TAKEN', 'NO KEYS HERE!'].join(
           '\n',
         ),
       ],
-    ])('%s', (_testName, input, bag, expectedOutput) => {
+    ])('%s', (_testName, input, startingItems, expectedOutput) => {
       const game = new Game({
         input,
         output,
-        bag,
+        bag: new Bag({ items: startingItems }),
       });
 
       game.play();

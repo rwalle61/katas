@@ -31,28 +31,22 @@ export default class Location {
     this.gold = gold;
   }
 
-  private remove(itemName: ItemName) {
+  add(item: Item) {
+    this.items.push(item);
+  }
+
+  remove(itemName: ItemName) {
     this.items = this.items.filter((item) => !item.is(itemName));
   }
 
-  private find(itemName: ItemName) {
+  find(itemName: ItemName) {
     return this.items.find((item) => item.is(itemName));
-  }
-
-  take(itemName: ItemName): Item {
-    const item = this.find(itemName);
-    this.remove(itemName);
-    return item;
   }
 
   takeGold(): Gold {
     const { gold } = this;
     this.gold = 0;
     return gold;
-  }
-
-  add(item: Item) {
-    this.items.push(item);
   }
 
   use(item: Item): string {
