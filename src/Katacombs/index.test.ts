@@ -180,6 +180,12 @@ describe('Game', () => {
         Start,
         "CAN'T GET THERE!",
       ],
+      [
+        'Direction is locked',
+        newMockInput(['GO DOWN']),
+        TrumanBreweryBasement,
+        'TRAPDOOR IS LOCKED!',
+      ],
     ])('%s', (_testName, input, StartingLocation, expectedOutput) => {
       const game = new Game({
         input,
@@ -540,10 +546,14 @@ describe('Game', () => {
     it.each([
       [
         'item that can be used here',
-        newMockInput(['USE KEYS']),
+        newMockInput(['GO DOWN', 'USE KEYS', 'GO DOWN']),
         [new Item('KEYS')],
         TrumanBreweryBasement,
-        'THE TRAP DOOR HAS BEEN UNLOCKED!',
+        [
+          'TRAPDOOR IS LOCKED!',
+          'THE TRAP DOOR HAS BEEN UNLOCKED!',
+          'YOU ARE IN THE TRUMAN BREWERY SECRET LAIR.',
+        ].join('\n'),
       ],
       [
         'different item that can be used here',

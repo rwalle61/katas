@@ -19,5 +19,7 @@ Interesting challenges still to do:
 
 - refactor: follow the Law of Demeter strictly
 - test: add unit tests, but follow ATDD
+- feat: look output depends on where you're looking from
 - feat: allow Items to be Opened
+- feat: only locked doors can be unlocked
 - feat: allow Items to be used differently in different places

@@ -58,6 +58,11 @@ export default class Game {
       this.output(`${direction}: UNKNOWN DIRECTION`);
       return;
     }
+    const door = this.currentLocation.getDoor(direction);
+    if (door && door.locked) {
+      this.output('TRAPDOOR IS LOCKED!');
+      return;
+    }
     const nextLocation = this.map.getNextLocation(
       this.currentLocation,
       direction,

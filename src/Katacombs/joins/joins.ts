@@ -1,59 +1,37 @@
 import unique from 'array-unique';
 import flatten from 'arr-flatten';
-import * as Locations from './locations';
+import { Join, NorthSouthJoin, EastWestJoin, UpDownJoin } from './Join';
+import * as Locations from '../locations';
 import {
   Location,
   LocationConstructor,
   Direction,
   Axes,
   JoinsDirectory,
-  Join,
-} from './types';
+} from '../types';
 
 export const defaultJoins = {
   [Axes.NorthSouth]: [
-    {
-      [Direction.North]: Locations.Start,
-      [Direction.South]: Locations.BrickLaneMosque,
-    },
-    {
-      [Direction.North]: Locations.TrumanBrewery,
-      [Direction.South]: Locations.Start,
-    },
+    new NorthSouthJoin(Locations.Start, Locations.BrickLaneMosque),
+    new NorthSouthJoin(Locations.TrumanBrewery, Locations.Start),
   ],
   [Axes.EastWest]: [
-    {
-      [Direction.East]: Locations.Start,
-      [Direction.West]: Locations.PulseCinema,
-    },
-    {
-      [Direction.East]: Locations.BootcampPilates,
-      [Direction.West]: Locations.Start,
-    },
+    new EastWestJoin(Locations.Start, Locations.PulseCinema),
+    new EastWestJoin(Locations.BootcampPilates, Locations.Start),
   ],
   [Axes.UpDown]: [
-    {
-      [Direction.Up]: Locations.TrumanBrewery1stFloor,
-      [Direction.Down]: Locations.TrumanBrewery,
-    },
-    {
-      [Direction.Up]: Locations.TrumanBrewery,
-      [Direction.Down]: Locations.TrumanBreweryBasement,
-    },
-    {
-      [Direction.Up]: Locations.TrumanBreweryBasement,
-      [Direction.Down]: Locations.TrumanBreweryLair,
-    },
-    {
-      [Direction.Up]: Locations.TrumanBreweryLair,
-      [Direction.Down]: Locations.TrumanBrewerySubLair,
-    },
+    new UpDownJoin(Locations.TrumanBrewery1stFloor, Locations.TrumanBrewery),
+    new UpDownJoin(Locations.TrumanBrewery, Locations.TrumanBreweryBasement),
+    new UpDownJoin(
+      Locations.TrumanBreweryBasement,
+      Locations.TrumanBreweryLair,
+    ),
   ],
 };
 
 export const getLocations = (joins: JoinsDirectory): LocationConstructor[] => {
   const listOfJoins = flatten(Object.values(joins));
-  const locations = flatten(listOfJoins.map((join) => Object.values(join)));
+  const locations = flatten(listOfJoins.map((join) => join.getLocations()));
   return unique(locations);
 };
 
@@ -84,6 +62,6 @@ export const findJoin = (
   const joinsAlongAxis = joins[axis];
   const inverseDirection = InverseDirection[directionToNextLocation];
   return joinsAlongAxis.find((join) =>
-    currentLocation.is(join[inverseDirection]),
+    currentLocation.is(join.getLocation(inverseDirection)),
   );
 };

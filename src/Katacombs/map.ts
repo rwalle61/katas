@@ -4,7 +4,7 @@ import {
   Location as ILocation,
   LocationConstructor,
 } from './types';
-import { defaultJoins, getLocations, findJoin } from './joins';
+import { defaultJoins, getLocations, findJoin } from './joins/joins';
 import { Start } from './locations';
 import Item from './items/Item';
 
@@ -57,7 +57,7 @@ export default class Map {
     if (!join) {
       return null;
     }
-    const nextLocationConstructor = join[directionToNextLocation];
+    const nextLocationConstructor = join.getLocation(directionToNextLocation);
     return this.getLocation(nextLocationConstructor);
   }
 }

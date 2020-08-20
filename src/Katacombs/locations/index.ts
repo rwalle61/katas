@@ -6,4 +6,3 @@ export { default as BrickLaneMosque } from './BrickLaneMosque';
 export { default as PulseCinema } from './PulseCinema';
 export { default as BootcampPilates } from './BootcampPilates';
 export { default as TrumanBreweryLair } from './TrumanBreweryLair';
-export { default as TrumanBrewerySubLair } from './TrumanBrewerySubLair';

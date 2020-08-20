@@ -1,3 +1,4 @@
+import { Join } from '../joins/Join';
 import { Direction } from './Direction';
 import Location, { LocationConstructor } from '../locations/Location';
 
@@ -16,10 +17,6 @@ export enum Command {
 export { ItemName } from './ItemName';
 export { ObjectName } from './ObjectName';
 export { Door } from './Door';
-
-export type Join = {
-  [direction in Direction]?: LocationConstructor;
-};
 
 export enum Axes {
   NorthSouth = 'NorthSouth',

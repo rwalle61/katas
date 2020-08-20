@@ -1,3 +1,4 @@
+import { Direction } from '../types/Direction';
 import { ObjectName } from '../types/ObjectName';
 import { Door } from '../types/Door';
 import { ItemName } from '../types/ItemName';
@@ -63,5 +64,9 @@ export default class Location {
 
   getOpenableObject(objectName: ObjectName) {
     return this.doors.find((door) => door.name === objectName);
+  }
+
+  getDoor(direction: Direction): Door {
+    return this.doors.find((door) => door.direction === direction);
   }
 }
