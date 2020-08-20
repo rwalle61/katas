@@ -8,6 +8,7 @@ import {
   TrumanBreweryBasement,
   TrumanBrewery1stFloor,
 } from './locations';
+import Compass from './items/Compass';
 
 const title = 'LOST IN SHOREDITCH.\n';
 const quitText = 'bye';
@@ -452,7 +453,7 @@ describe('Game', () => {
         output,
         map: new Map({
           itemMap: {
-            Start: { items: [new Item('KEYS'), new Item('COMPASS')] },
+            Start: { items: [new Item('KEYS'), new Compass()] },
           },
         }),
       });
@@ -518,13 +519,13 @@ describe('Game', () => {
       [
         'different item',
         newMockInput(['DROP COMPASS', 'BAG']),
-        [new Item('COMPASS')],
+        [new Compass()],
         ['COMPASS: DROPPED', emptyBagText].join('\n'),
       ],
       [
         'item remaining in bag',
         newMockInput(['DROP COMPASS', 'BAG']),
-        [new Item('KEYS'), new Item('COMPASS')],
+        [new Item('KEYS'), new Compass()],
         ['COMPASS: DROPPED', 'THE BAG CONTAINS: KEYS'].join('\n'),
       ],
       ['item not in bag', newMockInput(['DROP KEYS']), [], 'NO KEYS IN BAG'],
@@ -556,16 +557,20 @@ describe('Game', () => {
         ].join('\n'),
       ],
       [
-        'different item that can be used here',
-        newMockInput(['USE COMPASS']),
-        [new Item('COMPASS')],
+        'item that can be used anywhere',
+        newMockInput(['USE COMPASS', 'GO N', 'USE COMPASS']),
+        [new Compass()],
         Start,
-        'THE COMPASS SPINS AND SPINS, FINALLY SETTLING NORTH',
+        [
+          'THE COMPASS SPINS AND SPINS, FINALLY SETTLING NORTH',
+          new TrumanBrewery().description,
+          'THE COMPASS SPINS AND SPINS, FINALLY SETTLING NORTH',
+        ].join('\n'),
       ],
       [
         'item that can be used infinite times',
         newMockInput(['USE COMPASS', 'USE COMPASS']),
-        [new Item('COMPASS')],
+        [new Compass()],
         Start,
         [
           'THE COMPASS SPINS AND SPINS, FINALLY SETTLING NORTH',

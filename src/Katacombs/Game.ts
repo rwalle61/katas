@@ -132,9 +132,13 @@ export default class Game {
       this.output(Bag.getItemNotFoundText(itemName));
       return;
     }
-    const useText = this.currentLocation.use(item);
-    this.output(useText);
-    item.use();
+    const textFromUsingItem = item.use();
+    if (textFromUsingItem) {
+      this.output(textFromUsingItem);
+    } else {
+      const useText = this.currentLocation.use(item);
+      this.output(useText);
+    }
     if (item.hasDegraded()) {
       this.bag.remove(itemName);
     }
